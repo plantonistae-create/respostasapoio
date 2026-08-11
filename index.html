@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levantamento de Apoio de Saúde — 9º Gpt Log</title>
+<style>
+  :root{
+    --ink:#0d1117;
+    --ink-soft:#1c2530;
+    --gold:#b08d57;
+    --gold-light:#d4b483;
+    --paper:#f7f6f3;
+    --paper-dim:#ecebe6;
+    --line:#d8d5cc;
+    --text:#22262b;
+    --muted:#6b7078;
+    --ok:#2f6f4f;
+    --err:#a13636;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI", Arial, sans-serif;
+    background:var(--paper-dim);
+    color:var(--text);
+    padding-bottom:60px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header.hero{
+    background:linear-gradient(135deg,var(--ink) 0%,var(--ink-soft) 100%);
+    color:#eee;
+    padding:36px 32px 30px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute; right:-60px; top:-60px;
+    width:220px;height:220px;border-radius:50%;
+    border:1px solid rgba(212,180,131,0.15);
+  }
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:12.5px;
+    color:var(--gold-light);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  h1.title{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:32px;
+    margin:0 0 8px;
+    font-weight:600;
+  }
+  .subtitle{color:#c7cbd1;font-size:14.5px;margin-bottom:18px;}
+  .protocolo{
+    position:absolute; top:34px; right:32px;
+    font-size:11px; color:var(--gold-light); letter-spacing:1px;
+    text-align:right;
+  }
+  .protocolo b{display:block;font-size:13px;color:#fff;margin-top:2px;}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn-ghost{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.35);
+    color:#eee;
+    padding:9px 16px;
+    border-radius:6px;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,0.08);}
+
+  main{background:var(--paper);}
+  .correction-link{
+    padding:16px 32px; text-align:right; font-size:13px;
+    border-bottom:1px solid var(--line);
+  }
+  .correction-link a{color:var(--gold);text-decoration:underline;cursor:pointer;}
+
+  .section{padding:28px 32px;border-bottom:1px solid var(--line);}
+  .section-head{
+    display:flex;align-items:center;gap:12px;margin-bottom:20px;
+  }
+  .section-num{
+    width:26px;height:26px;border:1px solid var(--text);
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:600;flex-shrink:0;
+  }
+  .section-head h2{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:19px; margin:0; letter-spacing:0.5px;
+  }
+
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;
+  }
+  .field input[type=text], .field input[type=tel], .field input[type=number], .field textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    font-size:14px;
+    font-family:inherit;
+    background:#fff;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none;border-color:var(--gold);
+  }
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
+
+  .toggle-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .toggle-btn{
+    padding:11px 20px;border:1px solid var(--line);border-radius:6px;
+    background:#fff;cursor:pointer;font-size:14px;color:var(--muted);
+    transition:all .15s;
+  }
+  .toggle-btn.active{
+    background:var(--ink);color:#fff;border-color:var(--ink);
+    font-weight:600;
+  }
+
+  .amb-group{
+    border:1px solid var(--line);border-radius:8px;margin-bottom:16px;overflow:hidden;
+  }
+  .amb-group-head{
+    background:var(--ink);color:#fff;
+    padding:9px 16px;font-size:12.5px;font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .amb-sub{padding:16px;border-top:1px dashed var(--line);}
+  .amb-sub:first-of-type{border-top:none;}
+  .amb-sub h4{
+    margin:0 0 12px;font-size:12px;letter-spacing:1px;color:var(--muted);
+    text-transform:uppercase;
+  }
+  .amb-fields{display:grid;grid-template-columns:110px 1fr 150px;gap:14px;align-items:end;}
+  @media(max-width:600px){.amb-fields{grid-template-columns:1fr;}}
+  .radio-row{display:flex;gap:16px;padding-bottom:11px;}
+  .radio-row label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:400;cursor:pointer;}
+  .radio-row input{margin:0;}
+
+  .driver-card{
+    border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:12px;
+    background:#fff;position:relative;
+  }
+  .driver-card .remove{
+    position:absolute;top:12px;right:14px;font-size:12.5px;color:var(--err);
+    text-decoration:underline;cursor:pointer;background:none;border:none;
+  }
+  .driver-fields{display:grid;grid-template-columns:2fr 1fr 1.4fr;gap:14px;}
+  @media(max-width:600px){.driver-fields{grid-template-columns:1fr;}}
+  .add-driver{
+    border:1px dashed var(--gold);border-radius:8px;padding:13px;text-align:center;
+    color:var(--gold);cursor:pointer;font-size:14px;font-weight:600;background:#fff;width:100%;
+  }
+  .add-driver:hover{background:#faf5ec;}
+
+  .submit-row{
+    padding:28px 32px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .btn-submit{
+    background:var(--gold);color:#fff;border:none;
+    padding:14px 30px;border-radius:6px;font-size:15px;font-weight:700;
+    cursor:pointer;letter-spacing:0.3px;
+  }
+  .btn-submit:hover{background:#9c7a49;}
+  .btn-submit:disabled{background:#c9b795;cursor:not-allowed;}
+  .required-note{font-size:12.5px;color:var(--muted);}
+
+  .status-msg{
+    margin:0 32px 20px;padding:14px 16px;border-radius:6px;font-size:14px;display:none;
+  }
+  .status-msg.ok{background:#e7f3ec;color:var(--ok);border:1px solid #b9dbc6;display:block;}
+  .status-msg.err{background:#fbeaea;color:var(--err);border:1px solid #edc0c0;display:block;}
+
+  footer{
+    text-align:center;padding:22px;font-size:12px;color:var(--muted);
+  }
+
+  #qrBox{
+    display:none;margin-top:14px;background:#fff;padding:16px;border-radius:8px;
+    max-width:220px;
+  }
+  #qrBox img{width:100%;display:block;}
+  #qrBox p{font-size:11px;color:#555;text-align:center;margin:8px 0 0;word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="protocolo">PROTOCOLO<b id="protocoloNum">—</b></div>
+    <div class="eyebrow">9º Grupamento de Logística</div>
+    <h1 class="title">Levantamento de Apoio de Saúde</h1>
+    <div class="subtitle">Formulário para preenchimento externo — finalidade de planejamento</div>
+    <div class="hero-actions">
+      <button type="button" class="btn-ghost" id="qrToggle">Mostrar QR Code para preenchimento</button>
+    </div>
+    <div id="qrBox"><img id="qrImg" alt="QR Code do formulário"><p id="qrUrl"></p></div>
+  </header>
+
+  <main>
+    <div class="correction-link">
+      <a id="editLink">Já enviei uma resposta e quero corrigi-la</a>
+    </div>
+
+    <form id="apsForm">
+
+      <!-- 1. IDENTIFICAÇÃO -->
+      <section class="section">
+        <div class="section-head"><div class="section-num">1</div><h2>Identificação</h2></div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="om">OM (Organização Militar) *</label>
+            <input type="text" id="om" name="om" required>
+          </div>
+          <div class="field">
+            <label for="contato">Responsável / Contato *</label>
+            <input type="text" id="contato" name="contato" placeholder="Nome e telefone/e-mail" required>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. SETOR DE ATUAÇÃO -->
+      <section class="section">
+        <div class="section-head"><div class="section-num">2</div><h2>Setor de Atuação</h2></div>
+        <div class="toggle-row" id="setorRow">
+          <button type="button" class="toggle-btn" data-value="Setor Sul">Setor Sul</button>
+          <button type="button" class="toggle-btn" data-value="Setor Centro">Setor Centro</button>
+          <button type="button" class="toggle-btn" data-value="Setor Norte">Setor Norte</button>
+        </div>
+        <input type="hidden" id="setor" name="setor">
+      </section>
+
+      <!-- 3. AMBULÂNCIAS -->
+      <section class="section">
+        <div class="section-head"><div class="section-num">3</div><h2>Ambulâncias — Quantidade e Tipo</h2></div>
+
+        <div class="amb-group">
+          <div class="amb-group-head">Operacional</div>
+          <div class="amb-sub">
+            <h4>Básica</h4>
+            <div class="amb-fields">
+              <div class="field" style="margin-bottom:0"><label>Quantidade</label><input type="number" min="0" value="0" id="op_bas_qtd"></div>
+              <div class="field" style="margin-bottom:0"><label>Modelo</label><input type="text" id="op_bas_modelo"></div>
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;">Tomadas funcionam</label>
+                <div class="radio-row" style="padding-bottom:0">
+                  <label><input type="radio" name="op_bas_tomadas" value="Sim"> Sim</label>
+                  <label><input type="radio" name="op_bas_tomadas" value="Não"> Não</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="amb-sub">
+            <h4>Avançada</h4>
+            <div class="amb-fields">
+              <div class="field" style="margin-bottom:0"><label>Quantidade</label><input type="number" min="0" value="0" id="op_av_qtd"></div>
+              <div class="field" style="margin-bottom:0"><label>Modelo</label><input type="text" id="op_av_modelo"></div>
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;">Tomadas funcionam</label>
+                <div class="radio-row" style="padding-bottom:0">
+                  <label><input type="radio" name="op_av_tomadas" value="Sim"> Sim</label>
+                  <label><input type="radio" name="op_av_tomadas" value="Não"> Não</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="amb-group">
+          <div class="amb-group-head">Administrativa</div>
+          <div class="amb-sub">
+            <h4>Básica</h4>
+            <div class="amb-fields">
+              <div class="field" style="margin-bottom:0"><label>Quantidade</label><input type="number" min="0" value="0" id="adm_bas_qtd"></div>
+              <div class="field" style="margin-bottom:0"><label>Modelo</label><input type="text" id="adm_bas_modelo"></div>
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;">Tomadas funcionam</label>
+                <div class="radio-row" style="padding-bottom:0">
+                  <label><input type="radio" name="adm_bas_tomadas" value="Sim"> Sim</label>
+                  <label><input type="radio" name="adm_bas_tomadas" value="Não"> Não</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="amb-sub">
+            <h4>Avançada</h4>
+            <div class="amb-fields">
+              <div class="field" style="margin-bottom:0"><label>Quantidade</label><input type="number" min="0" value="0" id="adm_av_qtd"></div>
+              <div class="field" style="margin-bottom:0"><label>Modelo</label><input type="text" id="adm_av_modelo"></div>
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;">Tomadas funcionam</label>
+                <div class="radio-row" style="padding-bottom:0">
+                  <label><input type="radio" name="adm_av_tomadas" value="Sim"> Sim</label>
+                  <label><input type="radio" name="adm_av_tomadas" value="Não"> Não</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. EQUIPE DE SAÚDE -->
+      <section class="section">
+        <div class="section-head"><div class="section-num">4</div><h2>Equipe de Saúde</h2></div>
+        <div class="grid-2" style="grid-template-columns:1fr 1fr 1fr;">
+          <div class="field"><label>Médico(s)</label><input type="number" min="0" value="0" id="medicos"></div>
+          <div class="field"><label>Técnico(s) de Enfermagem</label><input type="number" min="0" value="0" id="tecnicos"></div>
+          <div class="field"><label>Padioleiro(s)</label><input type="number" min="0" value="0" id="padioleiros"></div>
+        </div>
+      </section>
+
+      <!-- 5. MOTORISTAS -->
+      <section class="section">
+        <div class="section-head"><div class="section-num">5</div><h2>Motoristas</h2></div>
+        <p style="font-size:13.5px;color:var(--muted);margin-top:-8px;">Adicione uma ficha para cada motorista disponibilizado.</p>
+        <div id="driversWrap"></div>
+        <button type="button" class="add-driver" id="addDriver">+ Adicionar motorista</button>
+      </section>
+
+      <!-- 6. OBSERVAÇÕES -->
+      <section class="section">
+        <div class="section-head"><div class="section-num">6</div><h2>Observações</h2></div>
+        <div class="field" style="margin-bottom:0">
+          <textarea id="observacoes" rows="4" placeholder="Informações adicionais relevantes ao planejamento"></textarea>
+        </div>
+      </section>
+
+      <div class="status-msg" id="statusMsg"></div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn-submit" id="submitBtn">Enviar formulário</button>
+        <span class="required-note">Os campos marcados com * são obrigatórios.</span>
+      </div>
+    </form>
+  </main>
+
+  <footer>9º Gpt Log · Levantamento de Apoio de Saúde · dados enviados ficam disponíveis para consulta pela equipe de planejamento</footer>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURAÇÃO — cole aqui a URL do seu Web App do Google Apps
+   Script (veja as instruções enviadas junto com este arquivo).
+   ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVOiJlHRbVgQaIp370A2_hmQzQ8KxnLKjVivyItQpiurp9H-_iZfLMmFK1v2ijG65ryw/exec";
+
+// ---------- Protocolo ----------
+function gerarProtocolo(){
+  const ano = new Date().getFullYear();
+  const num = Math.floor(1000 + Math.random()*9000);
+  return `APS-${ano}-${num}`;
+}
+const protocolo = gerarProtocolo();
+document.getElementById('protocoloNum').textContent = protocolo;
+
+// ---------- QR Code ----------
+const qrToggle = document.getElementById('qrToggle');
+const qrBox = document.getElementById('qrBox');
+const qrImg = document.getElementById('qrImg');
+const qrUrlText = document.getElementById('qrUrl');
+qrToggle.addEventListener('click', () => {
+  const shown = qrBox.style.display === 'block';
+  if (!shown) {
+    const url = window.location.href;
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
+    qrUrlText.textContent = url;
+    qrBox.style.display = 'block';
+  } else {
+    qrBox.style.display = 'none';
+  }
+});
+
+// ---------- Correção de resposta já enviada ----------
+document.getElementById('editLink').addEventListener('click', () => {
+  alert('Para corrigir uma resposta já enviada, entre em contato com o responsável pelo planejamento informando o número de protocolo utilizado no envio original, ou preencha novamente o formulário — os envios ficam registrados com data/hora para conferência.');
+});
+
+// ---------- Setor de atuação (seleção única) ----------
+const setorRow = document.getElementById('setorRow');
+const setorInput = document.getElementById('setor');
+setorRow.addEventListener('click', (e) => {
+  const btn = e.target.closest('.toggle-btn');
+  if (!btn) return;
+  [...setorRow.children].forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setorInput.value = btn.dataset.value;
+});
+
+// ---------- Motoristas dinâmicos ----------
+const driversWrap = document.getElementById('driversWrap');
+let driverCount = 0;
+
+function addDriverCard(){
+  driverCount++;
+  const id = driverCount;
+  const card = document.createElement('div');
+  card.className = 'driver-card';
+  card.dataset.id = id;
+  card.innerHTML = `
+    <button type="button" class="remove">remover</button>
+    <div class="driver-fields">
+      <div class="field" style="margin-bottom:0">
+        <label>Nome</label>
+        <input type="text" class="drv-nome">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Categoria CNH</label>
+        <input type="text" class="drv-cnh" placeholder="ex: D">
+      </div>
+      <div>
+        <label style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;">Curso de veículo de emergência</label>
+        <div class="radio-row" style="padding-bottom:0">
+          <label><input type="radio" name="drv_curso_${id}" value="Sim"> Sim</label>
+          <label><input type="radio" name="drv_curso_${id}" value="Não"> Não</label>
+        </div>
+      </div>
+    </div>
+  `;
+  card.querySelector('.remove').addEventListener('click', () => card.remove());
+  driversWrap.appendChild(card);
+}
+document.getElementById('addDriver').addEventListener('click', addDriverCard);
+addDriverCard(); // primeira ficha já visível, como no original
+
+// ---------- Coleta e envio ----------
+function coletarMotoristas(){
+  return [...driversWrap.querySelectorAll('.driver-card')].map(card => {
+    const id = card.dataset.id;
+    const curso = card.querySelector(`input[name="drv_curso_${id}"]:checked`);
+    return {
+      nome: card.querySelector('.drv-nome').value.trim(),
+      cnh: card.querySelector('.drv-cnh').value.trim(),
+      curso_emergencia: curso ? curso.value : ''
+    };
+  }).filter(m => m.nome || m.cnh);
+}
+
+function radioVal(name){
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+const form = document.getElementById('apsForm');
+const statusMsg = document.getElementById('statusMsg');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  statusMsg.className = 'status-msg';
+  statusMsg.textContent = '';
+
+  const om = document.getElementById('om').value.trim();
+  const contato = document.getElementById('contato').value.trim();
+  if (!om || !contato){
+    statusMsg.className = 'status-msg err';
+    statusMsg.textContent = 'Preencha os campos obrigatórios (OM e Responsável/Contato).';
+    statusMsg.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  const payload = {
+    protocolo,
+    timestamp: new Date().toISOString(),
+    om,
+    contato,
+    setor: setorInput.value,
+    ambulancias: {
+      operacional: {
+        basica: {
+          quantidade: document.getElementById('op_bas_qtd').value,
+          modelo: document.getElementById('op_bas_modelo').value.trim(),
+          tomadas_funcionam: radioVal('op_bas_tomadas')
+        },
+        avancada: {
+          quantidade: document.getElementById('op_av_qtd').value,
+          modelo: document.getElementById('op_av_modelo').value.trim(),
+          tomadas_funcionam: radioVal('op_av_tomadas')
+        }
+      },
+      administrativa: {
+        basica: {
+          quantidade: document.getElementById('adm_bas_qtd').value,
+          modelo: document.getElementById('adm_bas_modelo').value.trim(),
+          tomadas_funcionam: radioVal('adm_bas_tomadas')
+        },
+        avancada: {
+          quantidade: document.getElementById('adm_av_qtd').value,
+          modelo: document.getElementById('adm_av_modelo').value.trim(),
+          tomadas_funcionam: radioVal('adm_av_tomadas')
+        }
+      }
+    },
+    equipe_saude: {
+      medicos: document.getElementById('medicos').value,
+      tecnicos_enfermagem: document.getElementById('tecnicos').value,
+      padioleiros: document.getElementById('padioleiros').value
+    },
+    motoristas: coletarMotoristas(),
+    observacoes: document.getElementById('observacoes').value.trim()
+  };
+
+  if (!SCRIPT_URL || SCRIPT_URL.includes('COLE_AQUI')){
+    statusMsg.className = 'status-msg err';
+    statusMsg.innerHTML = 'Backend ainda não configurado: defina a variável <code>SCRIPT_URL</code> no início do script com a URL do seu Web App do Google Apps Script.';
+    console.log('Payload que seria enviado:', payload);
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Enviando...';
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    statusMsg.className = 'status-msg ok';
+    statusMsg.textContent = `Formulário enviado com sucesso. Protocolo: ${protocolo}`;
+    form.reset();
+    driversWrap.innerHTML = '';
+    driverCount = 0;
+    addDriverCard();
+    [...setorRow.children].forEach(b => b.classList.remove('active'));
+    setorInput.value = '';
+  } catch(err){
+    statusMsg.className = 'status-msg err';
+    statusMsg.textContent = 'Não foi possível enviar. Verifique sua conexão e tente novamente.';
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Enviar formulário';
+    statusMsg.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+});
+</script>
+</body>
+</html>
